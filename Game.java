@@ -124,7 +124,7 @@ public class Game implements ActionListener {
 // start of actionPerformed to check answer and questions 
 public void actionPerformed(ActionEvent ae) {
   //get value of correct answer and store in a variable for comparison
-   String correctAns = buttonA[Questions.get(questionNum).getCorrectAnswer()-1].getText()
+   String correctAns = buttonA[Questions.get(questionNum).getCorrectAnswer()-1].getText();
     if(ae.getActionCommand().equals("myTF")){
       String user = fieldName.getText(); 
         //welcome user with name from textfield
@@ -136,32 +136,32 @@ public void actionPerformed(ActionEvent ae) {
     
     else if(ae.getActionCommand().equals(correctAns)){
       jlabCorrect.setText("You Got it!, please Click Continue");
-      score = points + Questions.get(nextQuestion).getValue();
-      jlabScore.setText("Score: "+ points);
+      points = points + Questions.get(questionNum).getPoint();
+      jlabuserPoints.setText("Score: "+ points);
       jlabCorrect.setVisible(true);
     }
      // if it is correct answer add points, if not user hits countie to try again 
     
     else if(ae.getActionCommand().equals("Continue")){
-      if(nextQuestion < Questions.size()-1) {
-        nextQuestion++;
-       buttonA (nextQuestion);
+      if (questionNum < Questions.size()-1) {
+        questionNum++;
+       nextQuestion (questionNum);
         jlabCorrect.setVisible(false);
       }
-       else if(nextQuestion == Questions.size()-1){
-        jlabWelcome.setText("Thats it! Thanks for playing");
-        jlabScore.setText("You Scored: " + points  + " points! Nice!"); 
-        jlabScore.setVisible(true);
+       else if(questionNum == Questions.size()-1){
+        jlabName.setText("Thats it! Thanks for playing");
+        jlabuserPoints.setText("You Scored: " + points  + " points! Nice!"); 
+        jlabuserPoints.setVisible(true);
            
       }
-    }
+    
     else if(!ae.getActionCommand().equals(correctAns)) {
       jlabCorrect.setText("That's not Correct, please click Continue");
       jlabCorrect.setVisible(true);
     }
 
 
-    
+    }
   }
 
 }
