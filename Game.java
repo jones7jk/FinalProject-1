@@ -3,24 +3,26 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.io.*;
 import javax.swing.*;
-
-Public class Game implements ActionListener {
-  JTextField fieldName; 
-  JButton buttonAnswer1, buttonAswer2, buttonAnswer3, buttonAnswer4; 
+//imports all the items we need for what were using 
+//statrt class and implements actionlistener 
+public class Game implements ActionListener {
+  JTextField fieldName; // declars are input textfield for user
+  // declares all our varaibles
+  JButton buttonAnswer1, buttonAnswer2, buttonAnswer3, buttonAnswer4,buttonNext; 
    int points=0;
    int questionNum= 0;
    JLabel jlabName, jlabQuestion,jlabCorrect, jlabuserPoints, jlabvalue; 
 
-
+    //declares are ArrayList and input our txtfile
     static ArrayList<Question> Questions;
      static String filename = "trivia.txt";
      static FileReader myFile;
-     // to get the correct answer 
+     // starts a aray list to store are buttons for next questions 
      JButton[] buttonA = new JButton[4];
      
-     //changing questions
+     //Method to change questions and correct answers 
      public void nextQuestion(int question){     
-    jlabQuestion.setText(Questions.get(question).getQText());
+    jlabQuestion.setText(Questions.get(question).getQuestion());
     jlabuserPoints.setText("point" + Integer.toString(Questions.get(question).getPoint()));
     buttonAnswer1.setText(Questions.get(question).getAnswer1());
     buttonAnswer2.setText(Questions.get(question).getAnswer2());
@@ -32,11 +34,11 @@ Public class Game implements ActionListener {
      
 
     
-    
+    // start of object 
 
    Game(){
     
-      JFrame frame = new JFrame("Group 7 Great Trivia Game!"); 
+      JFrame frame = new JFrame("Group 7 Great Trivia Game!"); //adds are frame
       // Specify FlowLayout for the layout manager. 
       frame.setLayout(new FlowLayout()); 
       // Give the frame an initial size. 
@@ -45,19 +47,19 @@ Public class Game implements ActionListener {
       fieldName = new JTextField(10); 
       // Set the action commands for the text field. 
       fieldName.setActionCommand("myTF");
-
+       //declares are buttons 
        buttonAnswer1 = new JButton("A"); 
        buttonAnswer2 = new JButton("B");
        buttonAnswer3 = new JButton("C");
        buttonAnswer4 = new JButton("D");
        buttonNext= new JButton("Continue");
     
-      
-        buttonA[0] = buttonAnswer1;
-        buttonA[1] = buttonAnswer2;
-        buttonA[2] = buttonAnswer3;
-        buttonA[3] = buttonAnswer4;
-       
+       //addes each button to our ArrayList
+        buttonA[1] = buttonAnswer1;
+        buttonA[2] = buttonAnswer2;
+        buttonA[3] = buttonAnswer3;
+        buttonA[4] = buttonAnswer4;
+       // add of ActionListener for each varible 
       buttonAnswer1.addActionListener(this);
       buttonAnswer2.addActionListener(this);
       buttonAnswer3.addActionListener(this);
@@ -65,55 +67,40 @@ Public class Game implements ActionListener {
       buttonNext.addActionListener(this);
       fieldName.addActionListener(this);
 
-
+      //adds our lablels 
       jlabName = new JLabel("Whats Your Name?"); 
-       buttonEnter = new JButton("Enter");
+       // labels comes from our arraylist 
        jlabQuestion= new JLabel("");
        jlabCorrect = new JLabel("");
        jlabvalue= new JLabel("");
        jlabuserPoints= new JLabel("Score: " + points);
 
-
+         //adds to frame
       frame.add(jlabName);
       frame.add(jlabuserPoints);
       frame.add(fieldName);
        frame.add (jlabQuestion);
-       rame.add(jlabvalue);
+       frame.add(jlabvalue);
        frame.add(buttonAnswer1);
        frame.add(buttonAnswer2);
        frame.add(buttonAnswer3);
        frame.add(buttonAnswer4);
        frame.add (buttonNext);
        frame.add(jlabCorrect);
-       
-
-
-    
-      
-
-      
       // Display the frame. 
       frame.setVisible(true);
-       jlabQuestion.setVisible(false);
-       jlabuserPoints.setVisible(false);
-       jlabScore.setVisible(false);
-       buttonAnswer1.setVisible(false);
-       buttonAnswer2.setVisible(false);
-       buttonAnswer3.setVisible(false);
-       buttonAnswer4.setVisible(false);
-       buttonNext.setVisible(false);
-       jlabCorrect.setVisible(false);
-    
-
-
-      questions = new ArrayList<Question>();
+       
+         
+      Questions = new ArrayList<Question>();
        filename = "trivia.txt";
+       // sets arraylist data to question class 
        String question= "", answer1 = "", answer2 = "",answer3 = "",answer4= "",correctAnswer="",  point="";
 
-
+       // start of our try and catch 
       try {
      myFile = new FileReader(filename);
-     BufferedReader reader = new BufferedReader(myFile);
+     BufferedReader reader = new BufferedReader(myFile); 
+     //reads through trivia file line 
      while (reader.ready()) {
      question = reader.readLine();
      answer1 = reader.readLine();
@@ -122,8 +109,9 @@ Public class Game implements ActionListener {
      answer4= reader.readLine();
      correctAnswer= reader.readLine();
       point= reader.readLine();
-    Question aQuestion = new Question(question,answer1,answer2,answer3,answer4, Integer.parseInt(correctAnswer), Integer.parseInt(point))     ;Questions.add(theQuestion);
-    questions.add(aQuestion);
+      // makes new questiion obeject for each question in trivia file 
+    Question theQuestion = new Question(question,answer1,answer2,answer3,answer4, Integer.parseInt(correctAnswer), Integer.parseInt(point))     ;;
+    Questions.add(theQuestion);
       }
      reader.close();
     } 
@@ -133,75 +121,47 @@ Public class Game implements ActionListener {
    }
    }
 
-
+// start of actionPerformed to check answer and questions 
 public void actionPerformed(ActionEvent ae) {
+  //get value of correct answer and store in a variable for comparison
+   String correctAns = buttonA[Questions.get(questionNum).getCorrectAnswer()-1].getText()
     if(ae.getActionCommand().equals("myTF")){
-      //welcome user with name from textfield
-      String user = fieldName.getText();
-      jlabWelcome.setText("Welcome, " + user);
-      //call method to get question
-      getQ(questionNum);
-      //hide textbox and bring up questions/ answer choices
-      jlabScore.setVisible(true);
-      fieldName.setVisible(false);
-      jlabQuestion.setVisible(true);
-      jlabuserPoints.setVisible(true);
-      buttonAnswer1.setVisible(true);
-      buttonAnswer2.setVisible(true);
-      buttonAnswer3.setVisible(true);
-      buttonAnswer4.setVisible(true);
-      buttonNext.setVisible(true);
-      jlabCorrect.setVisible(false);
+      String user = fieldName.getText(); 
+        //welcome user with name from textfield
+      jlabName.setText("Welcome, " + user);
+      //uses method to get next question 
+      nextQuestion(questionNum);
+      
     }
-    //get value of correct answer and store in a variable for comparison
-    //String correctAns = buttons[questions.get(curQuestion).getCorrect()-1].getText();
-    //Shows next question once the next question button is pressed
-    //if the correct answer is clicked, show the follow label that says you got it correct. Following this: also add the points to your score
-     String correctAns = buttonA[questions.get(questionNum).getCorrect()-1].getText();
-
-    if(!ae.getActionCommand().equals(correctAns)) {
-      jlabCorrect.setText("That's not Correct, please click Next Question.");
-      jlabCorrect.setVisible(true);
-    }
-    if(ae.getActionCommand().equals("Continue")){
-      questionNum++;
-      getQ(questionNum);
-      jlabCorrect.setVisible(false);
-      if(questionNum == questions.size()){
-      jlabName.setText("Thats it! Thanks for playing");
-      jlabScore.setText("You Scored: " + points + " points! Nice!");       
-      }
-    }
-    if(ae.getActionCommand().equals("myTF")){
-    jlabCorrect.setText(""); 
-    }
+    
     else if(ae.getActionCommand().equals(correctAns)){
-      jlabCorrect.setText("You Got it!, please Click Next Question!");
-      score = points + questions.get(questionNum).getPoint();
+      jlabCorrect.setText("You Got it!, please Click Continue");
+      score = points + Questions.get(nextQuestion).getValue();
       jlabScore.setText("Score: "+ points);
       jlabCorrect.setVisible(true);
-    }     
-
-
-    //If the answer selected is incorrect, show the following text and don't give any points
-
-    // Ends game after all questions are answered and gives the user their score
+    }
+     // if it is correct answer add points, if not user hits countie to try again 
     
+    else if(ae.getActionCommand().equals("Continue")){
+      if(nextQuestion < Questions.size()-1) {
+        nextQuestion++;
+       buttonA (nextQuestion);
+        jlabCorrect.setVisible(false);
+      }
+       else if(nextQuestion == Questions.size()-1){
+        jlabWelcome.setText("Thats it! Thanks for playing");
+        jlabScore.setText("You Scored: " + points  + " points! Nice!"); 
+        jlabScore.setVisible(true);
+           
+      }
+    }
+    else if(!ae.getActionCommand().equals(correctAns)) {
+      jlabCorrect.setText("That's not Correct, please click Continue");
+      jlabCorrect.setVisible(true);
+    }
+
+
     
-    else if(ae.getActionCommand().equals("Continue") && questionNum == questions.size()){
-      jlabName.setText("Thats it! Thanks for playing");
-      jlabScore.setText("You Scored: " + points + " points! Nice!");
-      jlabScore.setVisible(true);
-      Name.setVisible(false);
-      jlabQuestion.setVisible(false);
-      jlabuserPoints.setVisible(false);
-      buttonAnswer1.setVisible(false);
-      buttonAnswer2.setVisible(false);
-      buttonAnswer3.setVisible(false);
-      buttonAnswer4.setVisible(false);
-      buttonNext.setVisible(false);
-      jlabCorrect.setVisible(false);
-    } 
   }
 
 }
